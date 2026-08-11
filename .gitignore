@@ -1,0 +1,17 @@
+.venv/
+.env
+__pycache__/
+**/__pycache__/
+*.pyc
+.ipynb_checkpoints/
+data/raw/
+data/processed/
+*.log
+.vscode/
+dist/
+build/
+node_modules/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
