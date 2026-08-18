@@ -1,1 +1,0 @@
-"""Future accessibility schema placeholders."""

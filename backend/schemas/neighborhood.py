@@ -1,1 +1,0 @@
-"""Future neighborhood schema placeholders."""
