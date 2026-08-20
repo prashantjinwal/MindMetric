@@ -21,4 +21,3 @@ python-dotenv
 pytest
 black
 ruff
-scikit-learn==1.6.1
