@@ -3,16 +3,9 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 import pandas as pd
 from typing import Literal
-from fastapi.middleware.cors import CORSMiddleware
 
 model = joblib.load('Mental_Health_Model.pkl')
 app = FastAPI()
-app.add_middleware(
-     CORSMiddleware,
-     allow_origins=["*"],
-     allow_methods=["*"],
-     allow_headers=["*"]
-)
 
 class StudentData(BaseModel):
       Age                       :    int = Field(...,ge=10, le=100)
@@ -21,16 +14,15 @@ class StudentData(BaseModel):
       Academic_Level            :    Literal['Undergraduate', 'Graduate', 'High School']
       Most_Used_Platform        :    Literal['Facebook', 'LinkedIn', 'Instagram', 'Snapchat', 'Twitter','YouTube', 'TikTok', 'LINE', 'KakaoTalk', 'VKontakte', 'WhatsApp','WeChat']
       Purpose_Of_Use            :    Literal['Networking', 'Education', 'Entertainment', 'News']
-      Avg_Daily_Usage_Hours     :   float = Field(...,ge=0, le=24)
+      Avg_Daily_Usage_Hours     :   float = Field(...,ge=1, le=24)
       Daily_Unlocks             :   int = Field(...,ge=0)
-      Study_Hours               :   float = Field(...,ge=0, le=24)
-      Physical_Activity_Hours   :   float = Field(...,ge=0, le=24)
-      Sleep_Hours_Per_Night     :   float = Field(...,ge=0, le=24)
-      Stress_Level              :   str = Literal['Medium', 'Low', 'Very High', 'High']
+      Study_Hours               :   float
+      Physical_Activity_Hours   :   float
+      Sleep_Hours_Per_Night     :   float
+      Stress_Level              :   str 
       
 
-class predictionResponse(BaseModel):
-     Predicted_MentalHealth_Score : float
+
 
 @app.get('/')
 def geet():
@@ -38,12 +30,12 @@ def geet():
 
 top_countires = ['Other','India','USA','Canada','Australia','UK','Germany','Mexico','Turkey','France']
 
-@app.post('/predict', response_model=predictionResponse)
+@app.post('/predict')
 def predict (data: StudentData):
 
      country_grp = data.Country if data.Country in top_countires else 'Other'
 
-     input_row = pd.DataFrame([{
+     input_row = pd.Dataframe([{
           'Age' : data.Age,
           'Gender' : data.Gender,
           'Country' : data.Country,
@@ -61,4 +53,3 @@ def predict (data: StudentData):
      }])
 
      prediction = model.predict(input_row)[0]
-     return predictionResponse(Predicted_MentalHealth_Score = round(float(prediction),2))

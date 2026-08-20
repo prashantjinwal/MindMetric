@@ -3,16 +3,9 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 import pandas as pd
 from typing import Literal
-from fastapi.middleware.cors import CORSMiddleware
 
 model = joblib.load('Mental_Health_Model.pkl')
 app = FastAPI()
-app.add_middleware(
-     CORSMiddleware,
-     allow_origins=["*"],
-     allow_methods=["*"],
-     allow_headers=["*"]
-)
 
 class StudentData(BaseModel):
       Age                       :    int = Field(...,ge=10, le=100)
